@@ -4,6 +4,8 @@ import pickle
 import logging
 import numpy as np
 import pandas as pd
+from dvclive import Live
+from src.data_ingestion import load_params
 from sklearn.metrics import accuracy_score,precision_score,recall_score,roc_auc_score
 
 log_dir='logs'
@@ -88,12 +90,23 @@ def save_metrics(metrics:dict,file_path:str)->None:
 
 def main():
     try:
+        params=load_params('params.yaml')
         clf=load_model('src/models/model.pkl')
         test_data=load_data('src/data/processed/test_tfidf.csv')
         
         x_test=test_data.iloc[:,:-1].values
         y_test=test_data.iloc[:,-1].values
         metrics=evaluate_model(clf,x_test,y_test)
+        
+        # Experiment Tracking with DVC Live
+        with Live(save_dvc_exp=True) as live:
+            live.log_metric('accuracy',metrics['accuracy'])
+            live.log_metric('precision',metrics['precision'])
+            live.log_metric('recall',metrics['recall'])
+            live.log_metric('auc',metrics['auc'])
+            
+            live.log_params(params)
+        
         save_metrics(metrics,'src/reports/metrics.json')
     except Exception as e:
         logger.error(f"Failed to complete model evaluation process: {e}")
