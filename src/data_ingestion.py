@@ -1,4 +1,5 @@
 import os
+import yaml
 import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -28,6 +29,19 @@ file_handler.setFormatter(formatter)
 
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+def load_params(params_path:str)->str:
+    try:
+        with open(params_path,'r') as f:
+            params=yaml.safe_load(f)
+        logger.debug(f"Parameters loaded successfully from {params_path}")
+        return params
+    except FileNotFoundError as e:
+        logger.error(f"Parameters file not found: {e}")
+        raise
+    except Exception as e:
+        logger.error(f"Unexpected error occurred while loading parameters: {e}")
+        raise
 
 def laod_data(data_url:str)->pd.DataFrame:
     try:
@@ -68,11 +82,14 @@ def save_data(train_data:pd.DataFrame,test_data:pd.DataFrame,data_path:str)->Non
 
 
 def main():
-    data_path="https://raw.githubusercontent.com/vikashishere/Datasets/refs/heads/main/spam.csv"
+    
     try:
+        params=load_params('params.yaml')
+        test_size=params['data_ingestion']['test_size']
+        data_path="https://raw.githubusercontent.com/vikashishere/Datasets/refs/heads/main/spam.csv"
         df=laod_data(data_path)
         final_df=preprocess_data(df)
-        train_data,test_data=train_test_split(final_df,test_size=0.2,random_state=2)
+        train_data,test_data=train_test_split(final_df,test_size=test_size,random_state=2)
         save_data(train_data,test_data,'src/data')
     except Exception as e:
         logger.error(f"Fail to complete the data ingestion process:{e}") 

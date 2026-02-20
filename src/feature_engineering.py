@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import logging
 from sklearn.feature_extraction.text import TfidfVectorizer
-
+from src.data_ingestion import load_params
 
 
 log_dir='logs'
@@ -73,7 +73,8 @@ def apply_tf_idf(train_data:pd.DataFrame,test_data:pd.DataFrame,max_features:int
 def main():
     
     try:
-        max_features=50
+        params=load_params('params.yaml')
+        max_features=params['feature_engineering']['max_features']
         train_data=load_data('src/data/interim/train_processed.csv')
         test_data=load_data('src/data/interim/test_processed.csv')
         

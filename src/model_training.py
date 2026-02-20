@@ -6,6 +6,8 @@ import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 
+from src.data_ingestion import load_params
+
 log_dir='logs'
 
 logger=logging.getLogger('model_training')
@@ -77,10 +79,7 @@ def save_model(model,file_path:str)->None:
 
 def main():
     try:
-        params={
-            'n_estimators':100,
-            'random_state':2
-        }
+        params=load_params('params.yaml')['model_training']
         train_data=load_data('src/data/processed/train_tfidf.csv')
         x_train = train_data.iloc[:, :-1].values
         y_train=train_data.iloc[:,-1].values

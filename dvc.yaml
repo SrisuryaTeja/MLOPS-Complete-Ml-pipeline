@@ -3,11 +3,13 @@ stages:
     cmd: python src/data_ingestion.py
     deps:
       - src/data_ingestion.py
+    params:
+      - data_ingestion.test_size
     outs:
       - src/data/raw
     
   pre-processing:
-    cmd: python src/pre-processing.py
+    cmd: python -m src.pre-processing
     deps:
       - src/pre-processing.py
       - src/data/raw
@@ -15,23 +17,28 @@ stages:
       - src/data/interim
 
   feature_engineering:
-    cmd: python src/feature_engineering.py
+    cmd: python -m src.feature_engineering
     deps:
       - src/feature_engineering.py
       - src/data/interim
+    params:
+      - feature_engineering.max_features
     outs:
       - src/data/processed
   
   model_training:
-    cmd: python src/model_training.py
+    cmd: python -m src.model_training
     deps:
       - src/model_training.py
       - src/data/processed
+    params:
+      - model_training.n_estimators
+      - model_training.random_state
     outs:
       - src/models
 
   model_evaluation:
-    cmd: python src/model_evaluation.py
+    cmd: python -m src.model_evaluation
     deps:
       - src/model_evaluation.py
       - src/models
