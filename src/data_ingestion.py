@@ -73,7 +73,7 @@ def main():
         df=laod_data(data_path)
         final_df=preprocess_data(df)
         train_data,test_data=train_test_split(final_df,test_size=0.2,random_state=2)
-        save_data(train_data,test_data,'./data')
+        save_data(train_data,test_data,'src/data')
     except Exception as e:
         logger.error(f"Fail to complete the data ingestion process:{e}") 
         raise

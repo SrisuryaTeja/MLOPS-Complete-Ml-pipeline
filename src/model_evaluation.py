@@ -88,13 +88,13 @@ def save_metrics(metrics:dict,file_path:str)->None:
 
 def main():
     try:
-        clf=load_model('models/model.pkl')
-        test_data=load_data('./data/processed/test_tfidf.csv')
+        clf=load_model('src/models/model.pkl')
+        test_data=load_data('src/data/processed/test_tfidf.csv')
         
         x_test=test_data.iloc[:,:-1].values
         y_test=test_data.iloc[:,-1].values
         metrics=evaluate_model(clf,x_test,y_test)
-        save_metrics(metrics,'./reports/metrics.json')
+        save_metrics(metrics,'src/reports/metrics.json')
     except Exception as e:
         logger.error(f"Failed to complete model evaluation process: {e}")
         print(f"Error: {e}")

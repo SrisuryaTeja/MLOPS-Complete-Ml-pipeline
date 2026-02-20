@@ -106,8 +106,8 @@ def preprocess_df(df, text_column='text'):
 # ===============================
 def main(text_column='text', target_column='target'):
     try:
-        train_data = pd.read_csv('./data/raw/train.csv')
-        test_data = pd.read_csv('./data/raw/test.csv')
+        train_data = pd.read_csv('src/data/raw/train.csv')
+        test_data = pd.read_csv('src/data/raw/test.csv')
         logger.debug("Data loaded successfully")
 
         # Encode target properly (Fit only on train)
@@ -125,7 +125,7 @@ def main(text_column='text', target_column='target'):
         test_processed_data = preprocess_df(test_data, text_column)
 
         # Save processed data
-        data_path = os.path.join('data', 'interim')
+        data_path = os.path.join('src/data', 'interim')
         os.makedirs(data_path, exist_ok=True)
 
         train_processed_data.to_csv(

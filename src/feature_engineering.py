@@ -74,13 +74,13 @@ def main():
     
     try:
         max_features=50
-        train_data=load_data('./data/interim/train_processed.csv')
-        test_data=load_data('./data/interim/test_processed.csv')
+        train_data=load_data('src/data/interim/train_processed.csv')
+        test_data=load_data('src/data/interim/test_processed.csv')
         
         train_df,test_df=apply_tf_idf(train_data,test_data,max_features)
         
-        save_data(train_df,os.path.join('./data','processed','train_tfidf.csv'))
-        save_data(test_df,os.path.join('./data','processed','test_tfidf.csv'))
+        save_data(train_df,os.path.join('src/data','processed','train_tfidf.csv'))
+        save_data(test_df,os.path.join('src/data','processed','test_tfidf.csv'))
         
     except Exception as e:
         logger.error(f"Failed to complete Feature Engineerring : {e}")
